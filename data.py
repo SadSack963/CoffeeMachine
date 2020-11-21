@@ -43,4 +43,3 @@ error_codes = {
     2: "Sorry there is not enough {ingredient}.",
     3: "Sorry that's not enough money. Money refunded.",
 }
-

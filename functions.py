@@ -1,13 +1,16 @@
 from data import MENU, resources, choices, error_codes
+from time import sleep
 
 
 def print_error(error_code):
+    """Prints an error message
+    Requires: error code"""
     print(f"{error_codes[error_code]}")
 
 
 def user_selection():
     """Validates the user selection.
-    Returns: index to the function in choices[], and an error code"""
+    Returns: index to the function in choices[]"""
     error_code: int = 0
     choice_text = ""
     for x in choices:
@@ -18,11 +21,11 @@ def user_selection():
                 choice_text += " / " + x
     choice = input(f"What would you like? ({choice_text}): ").lower()
     if choice in choices:
-        return choices.index(choice), error_code
+        return choices.index(choice)
     else:
         error_code = 1
         print_error(error_code)
-        return "", error_code
+        return ""
 
 
 def print_report(money):
@@ -36,23 +39,22 @@ def print_report(money):
 
 def switch_off():
     print("The Coffee Machine is now switched Off!")
-    quit()
+    quit()  # use os.system("exit") in terminal ?
 
 
 def check_ingredients(index):
-    """Check sufficient ingredients to make the selected beverage
+    """Check sufficient ingredients to make the selected beverage.
     Required: index to the beverage in choices[].
-    Returns: True if enough, False otherwise, and an error code"""
+    Returns: True if enough, False otherwise"""
     error_code = 0
-    sufficient = True
     drink = choices[index]
     recipe = MENU[drink]
     for ingredient in recipe["ingredients"]:
         if recipe["ingredients"][ingredient] > resources[ingredient]["quantity"]:
             error_code = 2
             print_error(error_code)
-            sufficient = False
-    return sufficient, error_code
+            return False
+    return True
 
 
 def get_payment(index, money):
@@ -62,13 +64,14 @@ def get_payment(index, money):
     error_code = 0
     paid = False
     change = 0
-    cost = MENU[index]["cost"]
-    print(f"Your drink costs ${cost}\nPlease insert coins.")
+    drink = choices[index]
+    cost = MENU[drink]["cost"]
+    print(f"Your drink costs ${cost:.2f}\nPlease insert coins.")
     quarters = int(input("How many quarters? : "))
     dimes = int(input("How many dimes? : "))
     nickles = int(input("How many nickles? : "))
     pennies = int(input("How many pennies? : "))
-    total = quarters * 0.25 + dimes * 10 + nickles * 5 + pennies
+    total = (quarters * 25 + dimes * 10 + nickles * 5 + pennies) / 100  # in dollars
     if total < cost:
         error_code = 3
         print_error(error_code)
@@ -76,17 +79,19 @@ def get_payment(index, money):
         paid = True
         money += cost
         change = total - cost
-        print(f"Here is ${change} in change.")
+        print(f"Here is ${change:.2f} in change.")
     else:
         paid = True
         money += cost
-    return paid, money, error_code
+    return paid, money
 
 
 def make_drink(index):
     """Perform actions to make the selected drink.
     Required: index to the beverage in choices[]."""
     print("Thank you. Your drink is on the way.")
+    sleep(5)  # Pause for 5 seconds
+
     drink = choices[index]
     recipe = MENU[drink]
     for ingredient in recipe["ingredients"]:

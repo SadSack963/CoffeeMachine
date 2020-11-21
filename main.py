@@ -1,5 +1,14 @@
-from data import MENU, resources, choices, error_codes
 import functions
+import os
+from time import sleep
+
+
+def cls():
+    """Cross-platform clear screen"""
+    # os.system(command) is used to run operating system commands
+    # This works in a terminal, but NOT in the PyCharm Run pane
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 
 # START
 # =====
@@ -8,14 +17,12 @@ money: float = 0.0
 
 while True:
     # Get user selection
-    result = functions.user_selection()
-    selection = result[0]
-    error = result[1]
-    if error != 0:
+    selection = functions.user_selection()
+    if selection == "":
         continue
 
     # Take action to perform user selection
-    if selection == 3:
+    elif selection == 3:
         functions.switch_off()
 
     elif selection == 4:
@@ -23,11 +30,9 @@ while True:
 
     else:
         # Check sufficient ingredients to make the drink
-        result = functions.check_ingredients(selection)
-        sufficient = result[0]
-        error = result[1]
-        if error != 0:
-            continue
+        sufficient = functions.check_ingredients(selection)
+        if not sufficient:
+            print("Maintenance required")
 
         if sufficient:
             # Sufficient ingredients to make the drink
@@ -35,16 +40,14 @@ while True:
             result = functions.get_payment(selection, money)
             paid = result[0]
             money = result[1]
-            error = result[2]
-            if error != 0:
-                continue
 
             if paid:
                 # Drink paid for
                 # Make the drink
                 functions.print_report(money)
-                result = functions.make_drink(selection)
-                success = result[0]
-                error = result[1]
+                functions.make_drink(selection)
                 functions.print_report(money)
 
+    sleep(5)  # Allows checking of output before clearing the screen
+    cls()  # Doesn't work in PyCharm Run pane
+    print()  # Print a blank line because cls() doesn't work
