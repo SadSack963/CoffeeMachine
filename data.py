@@ -25,9 +25,9 @@ MENU = {
 }
 
 resources = {
-    "water": 300,
-    "milk": 200,
-    "coffee": 100,
+    "water": {"quantity": 300, "unit": "ml"},
+    "milk": {"quantity": 200, "unit": "ml"},
+    "coffee": {"quantity": 100, "unit": "g"},
 }
 
 choices = [
@@ -40,6 +40,7 @@ choices = [
 
 error_codes = {
     1: "Invalid selection!",
-
+    2: "Sorry there is not enough {ingredient}.",
+    3: "Sorry that's not enough money. Money refunded.",
 }
 
