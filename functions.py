@@ -60,7 +60,7 @@ def check_ingredients(index):
 def get_payment(index, money):
     """Request coins to pay for the selected drink.
     Required: index to the beverage in choices[].
-    Returns: True if enough, False otherwise, new money total, and an error code"""
+    Returns: True if enough, False otherwise, new money total"""
     error_code = 0
     paid = False
     change = 0
