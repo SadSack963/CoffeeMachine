@@ -55,14 +55,14 @@ def check_ingredients(index):
     return sufficient, error_code
 
 
-def get_payment(selection, money):
+def get_payment(index, money):
     """Request coins to pay for the selected drink.
     Required: index to the beverage in choices[].
     Returns: True if enough, False otherwise, new money total, and an error code"""
     error_code = 0
     paid = False
     change = 0
-    cost = MENU[selection]["cost"]
+    cost = MENU[index]["cost"]
     print(f"Your drink costs ${cost}\nPlease insert coins.")
     quarters = int(input("How many quarters? : "))
     dimes = int(input("How many dimes? : "))
@@ -83,9 +83,12 @@ def get_payment(selection, money):
     return paid, money, error_code
 
 
-def make_drink(selection):
+def make_drink(index):
     """Perform actions to make the selected drink.
-    Required: index to the beverage in choices[].
-    Returns: True if enough, False otherwise"""
+    Required: index to the beverage in choices[]."""
     print("Thank you. Your drink is on the way.")
-
+    drink = choices[index]
+    recipe = MENU[drink]
+    for ingredient in recipe["ingredients"]:
+        resources[ingredient]["quantity"] -= recipe["ingredients"][ingredient]
+    print(f"Here is your {drink}. Enjoy!")
